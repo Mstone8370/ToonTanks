@@ -22,6 +22,7 @@ void APawnTank::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PlayerControllerRef = Cast<APlayerController>(GetController());
 }
 
 // Called to bind functionality to input
@@ -31,6 +32,7 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &APawnTank::CalculateMoveInput);
 	PlayerInputComponent->BindAxis("Turn", this, &APawnTank::CalculateRotateInput);
+	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &APawnTank::Fire);
 }
 void APawnTank::CalculateMoveInput(float Value)
 {
@@ -58,4 +60,18 @@ void APawnTank::Tick(float DeltaTime)
 
 	Rotate();
 	Move();
+
+	if (PlayerControllerRef)
+	{
+		FHitResult TraceHitResult;
+		PlayerControllerRef->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, TraceHitResult);
+		FVector HitLocation = TraceHitResult.ImpactPoint;
+
+		RotateTurretFunction(HitLocation);
+	}
+}
+
+void APawnTank::HandleDestruction()
+{
+	Super::HandleDestruction();
 }
