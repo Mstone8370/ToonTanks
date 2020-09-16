@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PawnBase.h"
+#include "../Actors/ProjectileBase.h"
 
 #include "Components/CapsuleComponent.h"
 
@@ -55,7 +56,13 @@ void APawnBase::RotateTurretFunction(FVector LookAtTarget)
 
 void APawnBase::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Fire Condition Success"));
+	if (ProjectileClass)
+	{
+		FVector SpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
+		FRotator SpawnRotation = ProjectileSpawnPoint->GetComponentRotation();
+		AProjectileBase* TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation);
+		TempProjectile->SetOwner(this);
+	}
 }
 
 void APawnBase::HandleDestruction()
