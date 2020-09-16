@@ -29,5 +29,5 @@ private:
 	float Health = 0.f;
 
 	ATankGameModeBase* GameModeRef;
-		
+	
 };
