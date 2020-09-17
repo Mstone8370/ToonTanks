@@ -74,4 +74,6 @@ void APawnTank::Tick(float DeltaTime)
 void APawnTank::HandleDestruction()
 {
 	Super::HandleDestruction();
+	
+	Destroy();
 }
