@@ -31,20 +31,6 @@ void APawnBase::BeginPlay()
 	
 }
 
-// Called every frame
-void APawnBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void APawnBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 void APawnBase::RotateTurretFunction(FVector LookAtTarget)
 {
 	FVector LookAtTargetCleaned = FVector(LookAtTarget.X, LookAtTarget.Y, TurretMesh->GetComponentLocation().Z);
@@ -63,6 +49,11 @@ void APawnBase::Fire()
 		AProjectileBase* TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation);
 		TempProjectile->SetOwner(this);
 	}
+}
+
+void APawnBase::PawnDestroyed()
+{
+
 }
 
 void APawnBase::HandleDestruction()

@@ -1,25 +1,53 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "TankGameModeBase.h"
+#include "../Pawns/PawnTank.h"
+#include "../Pawns/PawnTurret.h"
+
+#include "Kismet/GameplayStatics.h"
 
 void ATankGameModeBase::BeginPlay()
 {
+	Super::BeginPlay();
 
+	HandleGameStart();
 }
 
+int32 ATankGameModeBase::GetTargetTurretCount()
+{
+	TArray<AActor*> TurretActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APawnTurret::StaticClass(), TurretActors);
+	
+	return TurretActors.Num();
+}
 
 void ATankGameModeBase::ActorDied(AActor* DeadActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("A Pawn Died"));
+	if (DeadActor == PlayerTank)
+	{
+		PlayerTank->HandleDestruction();
+		HandleGameOver(false);
+	}
+	else if(APawnTurret* DestroyedTurret = Cast<APawnTurret>(DeadActor))
+	{
+		DestroyedTurret->HandleDestruction();
+		TargetTurrets--;
+		if (TargetTurrets <= 0)
+		{
+			HandleGameOver(true);
+		}
+	}
 }
 
 void ATankGameModeBase::HandleGameStart()
 {
+	PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
+	TargetTurrets = GetTargetTurretCount();
 
+	GameStart();
 }
 
 void ATankGameModeBase::HandleGameOver(bool PlayerWon)
 {
-
+	GameOver(PlayerWon);
 }
