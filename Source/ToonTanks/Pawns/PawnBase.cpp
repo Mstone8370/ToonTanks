@@ -58,7 +58,6 @@ void APawnBase::Fire()
 
 void APawnBase::PawnDestroyed()
 {
-
 }
 
 void APawnBase::HandleDestruction()

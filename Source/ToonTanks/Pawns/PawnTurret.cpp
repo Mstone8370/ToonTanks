@@ -79,4 +79,6 @@ float APawnTurret::ReturnDistanceToPlayer()
 void APawnTurret::HandleDestruction()
 {
 	Super::HandleDestruction();
+
+	Destroy();
 }
